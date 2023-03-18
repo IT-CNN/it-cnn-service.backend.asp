@@ -22,7 +22,6 @@ public class JwtService : IJwtService
         var authClaims = new List<Claim>
         {
             new(ClaimTypes.Name, user.UserName!),
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

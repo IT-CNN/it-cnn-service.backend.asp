@@ -46,4 +46,15 @@ public static class EntityToModel
         return new RoleOutModel(userRole.Role.Id, userRole.Role.Name ?? string.Empty, userRole.Role.LongName);
     }
 
+    public static User ToEntity(this UserCsvModel user)
+    {
+        return new User()
+        {
+            UserName = user.UserName ?? string.Empty,
+            BirthDate = user.BirthDate ?? DateTime.Now,
+            FirstName = user.FirstName ?? string.Empty,
+            LastName = user.LastName ?? string.Empty,
+            PhoneNumber = user.PhoneNumber ?? string.Empty,
+        };
+    }
 }

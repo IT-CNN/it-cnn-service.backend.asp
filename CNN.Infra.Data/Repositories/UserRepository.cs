@@ -1,5 +1,6 @@
 ﻿using CNN.Core.Business.Extensions;
 using CNN.Core.Business.Helpers;
+using CNN.Core.Business.Models.UserModels;
 using CNN.Core.Business.Repositories;
 using CNN.Core.Domain;
 using CNN.Core.Domain.Entities;
@@ -75,9 +76,13 @@ public class UserRepository : IUserRepository
             throw new BadRequestException(errors);
         }
 
-        return (await FindByUserName(created.UserName ?? string.Empty))!;
+        return (await FindByUserNameAsync(created.UserName ?? string.Empty))!;
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="identityResult"></param>
+    /// <exception cref="BadRequestException"></exception>
     private static void CheckIdentityResultAndThrowException(IdentityResult identityResult)
     {
         var errors = new Dictionary<string, List<string>>();
@@ -119,6 +124,7 @@ public class UserRepository : IUserRepository
 
     private async Task<User> CreateUser(User user, string password)
     {
+        user.CreatedAt = DateTime.Now;
         var identityResult = await _userManager.CreateAsync(user, password);
         if (!identityResult.Succeeded)
         {
@@ -126,10 +132,10 @@ public class UserRepository : IUserRepository
             CheckIdentityResultAndThrowException(identityResult);
         }
 
-        return (await FindByUserName(user.UserName ?? string.Empty))!;
+        return (await FindByUserNameAsync(user.UserName ?? string.Empty))!;
     }
 
-    public async Task<User?> FindByUserName(string userName)
+    public async Task<User?> FindByUserNameAsync(string userName)
     {
         return await UsersIncluded.FirstOrDefaultAsync(x => x.UserName == userName);
     }
@@ -143,5 +149,44 @@ public class UserRepository : IUserRepository
         if (!isCorrectPwd) throw new UnauthorizedAccessException();
 
         return user;
+    }
+
+    public async Task<ICollection<UserCsvModel>> AddManyByCsvAsync(List<UserCsvModel> dataExtract, string role)
+    {
+        if (role == AppRoles.ADMIN) throw new UnauthorizedAccessException();
+
+        foreach(var item in dataExtract)
+        {
+            if(item.Status == FIleReadStatus.Valid)
+            {
+                try
+                {
+                    var user = item.ToEntity();
+                    var nu = await AddAsync(user, DefaultParams.defaultPwd, role);
+                    item.Id = nu.Id;
+                }
+                catch (BadRequestException ex)
+                {
+                    item.Errors = ex.Errors;
+                    item.Status = FIleReadStatus.Exist;
+                }
+            }
+        }
+
+        return dataExtract;
+    }
+
+    public async Task<ICollection<User>> GetAllAsync()
+    {
+        return await UsersIncluded
+            .Where(u => u.UserRoles.FirstOrDefault(ur => ur.Role.Name == AppRoles.ADMIN) == null)
+            .ToListAsync();
+    }
+
+    public async Task<User?> FindByIdAsync(Guid id)
+    {
+        return await UsersIncluded
+            .Where(u => u.UserRoles.FirstOrDefault(ur => ur.Role.Name == AppRoles.ADMIN) == null)
+            .FirstOrDefaultAsync(u => u.Id == id);
     }
 }
