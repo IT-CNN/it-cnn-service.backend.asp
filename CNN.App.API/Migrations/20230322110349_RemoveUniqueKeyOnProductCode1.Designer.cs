@@ -4,6 +4,7 @@ using CNN.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CNN.App.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230322110349_RemoveUniqueKeyOnProductCode1")]
+    partial class RemoveUniqueKeyOnProductCode1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace CNN.App.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d7c8b4ec-004b-4949-b509-2541df2d971b"),
+                            Id = new Guid("d076ded8-61b4-4420-ae2f-3493d855cffb"),
                             Description = "",
                             Name = "Category"
                         });
@@ -65,7 +68,7 @@ namespace CNN.App.API.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValueSql("N'CN' + FORMAT(NEXT VALUE FOR ProductCodes, '000000')");
+                        .HasDefaultValue("N'CN' + FORMAT(NEXT VALUE FOR ProductCodes, '000000')");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -78,15 +81,12 @@ namespace CNN.App.API.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -156,21 +156,21 @@ namespace CNN.App.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("210740d3-4da4-4889-9cbc-990a19ccf780"),
+                            Id = new Guid("e2f1d4ed-aeb5-4086-af19-d6ac8cf53389"),
                             LongName = "Administrator",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("3de4d7f6-89ca-4056-b9c2-0646bac33e81"),
+                            Id = new Guid("1a8c8891-7696-4ea8-ab82-36ca1bbd7c43"),
                             LongName = "Simple user",
                             Name = "SIMPLE",
                             NormalizedName = "SIMPLE"
                         },
                         new
                         {
-                            Id = new Guid("14e422b0-5313-4f83-94e8-7916131a4f26"),
+                            Id = new Guid("73cfdc8e-529d-4047-8fad-cbeb1a9173ed"),
                             LongName = "Storekeeper",
                             Name = "STORE",
                             NormalizedName = "STORE"
@@ -299,27 +299,6 @@ namespace CNN.App.API.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("1286870a-099c-4d1a-a113-cb9c756b5311"),
-                            AccessFailedCount = 0,
-                            BirthDate = new DateTime(2023, 3, 22, 13, 11, 29, 668, DateTimeKind.Utc).AddTicks(8278),
-                            ConcurrencyStamp = "00afe9fc-62fd-4e48-947e-3a34e7db5826",
-                            CreatedAt = new DateTime(2023, 3, 22, 14, 11, 29, 668, DateTimeKind.Local).AddTicks(8223),
-                            EmailConfirmed = false,
-                            FirstName = "admin",
-                            IsActivate = true,
-                            LastName = "admin",
-                            LockoutEnabled = false,
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIS5SicxJ8fdfmVmCJS9v0JwpsiAIpYHZq/FNwpAdVFPYMYDnpS9qTAJLMRB0N99gQ==",
-                            PhoneNumberConfirmed = false,
-                            Picture = "default\\default-user.png",
-                            TwoFactorEnabled = false,
-                            UserName = "admin"
-                        });
                 });
 
             modelBuilder.Entity("CNN.Core.Domain.Entities.UserRole", b =>
@@ -335,13 +314,6 @@ namespace CNN.App.API.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = new Guid("1286870a-099c-4d1a-a113-cb9c756b5311"),
-                            RoleId = new Guid("210740d3-4da4-4889-9cbc-990a19ccf780")
-                        });
                 });
 
             modelBuilder.Entity("CategoryProduct", b =>

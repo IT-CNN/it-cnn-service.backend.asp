@@ -15,8 +15,8 @@ public class UserAuthOutModel: UserOutModel
     {
     }
 
-    public UserAuthOutModel(Guid id, string userName, DateTime birthDate, string firstName, string lastName, string? phoneNumber, ICollection<RoleOutModel> roles, string? picture, string token)
-        : base(userName, birthDate, firstName, lastName, phoneNumber, id, roles, picture)
+    public UserAuthOutModel(Guid id, string userName, DateTime birthDate, string firstName, string lastName, string? phoneNumber, ICollection<RoleOutModel> roles, string? picture, string token, bool isActive)
+        : base(userName, birthDate, firstName, lastName, phoneNumber, id, roles, picture, isActive)
     {
         Token = token;
     }

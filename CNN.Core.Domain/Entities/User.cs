@@ -11,7 +11,7 @@ public class User: IdentityUser<Guid>
     public DateTime BirthDate { get; set; }
     public DateTime? UpdateAt { get; set; }
     public DateTime? DeletedAt { get; set; }
-    public bool IsActivated { get; set; } = true;
+    public bool IsActivate { get; set; } = true;
 
     public virtual ICollection<UserRole> UserRoles { get; set; } = null!;
 }

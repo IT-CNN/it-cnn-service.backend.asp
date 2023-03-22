@@ -4,6 +4,7 @@ using CNN.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CNN.App.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230321123235_SetIsAvtivateToIsActiveOnBaseEntityAndCreateProductModel")]
+    partial class SetIsAvtivateToIsActiveOnBaseEntityAndCreateProductModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,35 +24,6 @@ namespace CNN.App.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.HasSequence<int>("ProductCodes");
-
-            modelBuilder.Entity("CNN.Core.Domain.Entities.Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("d7c8b4ec-004b-4949-b509-2541df2d971b"),
-                            Description = "",
-                            Name = "Category"
-                        });
-                });
 
             modelBuilder.Entity("CNN.Core.Domain.Entities.Product", b =>
                 {
@@ -64,8 +38,8 @@ namespace CNN.App.API.Migrations
                     b.Property<string>("Code")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValueSql("N'CN' + FORMAT(NEXT VALUE FOR ProductCodes, '000000')");
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValue("CONCAT('CN', FORMAT(NEXT VALUE FOR ProductCodes, '000000'))");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -78,14 +52,14 @@ namespace CNN.App.API.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("Code")
                         .IsUnique();
 
                     b.ToTable("Products");
@@ -112,8 +86,8 @@ namespace CNN.App.API.Migrations
                     b.Property<DateTime?>("UpdateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
+                    b.Property<float>("Value")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -156,21 +130,21 @@ namespace CNN.App.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("210740d3-4da4-4889-9cbc-990a19ccf780"),
+                            Id = new Guid("3c7c4c13-b120-4ac2-af10-a43d2b82a0ff"),
                             LongName = "Administrator",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("3de4d7f6-89ca-4056-b9c2-0646bac33e81"),
+                            Id = new Guid("1dcb0dc7-7292-4662-a3f8-82aaa84ea051"),
                             LongName = "Simple user",
                             Name = "SIMPLE",
                             NormalizedName = "SIMPLE"
                         },
                         new
                         {
-                            Id = new Guid("14e422b0-5313-4f83-94e8-7916131a4f26"),
+                            Id = new Guid("a925bafd-7752-48b2-8fcb-169f0a94fff9"),
                             LongName = "Storekeeper",
                             Name = "STORE",
                             NormalizedName = "STORE"
@@ -299,27 +273,6 @@ namespace CNN.App.API.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("1286870a-099c-4d1a-a113-cb9c756b5311"),
-                            AccessFailedCount = 0,
-                            BirthDate = new DateTime(2023, 3, 22, 13, 11, 29, 668, DateTimeKind.Utc).AddTicks(8278),
-                            ConcurrencyStamp = "00afe9fc-62fd-4e48-947e-3a34e7db5826",
-                            CreatedAt = new DateTime(2023, 3, 22, 14, 11, 29, 668, DateTimeKind.Local).AddTicks(8223),
-                            EmailConfirmed = false,
-                            FirstName = "admin",
-                            IsActivate = true,
-                            LastName = "admin",
-                            LockoutEnabled = false,
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIS5SicxJ8fdfmVmCJS9v0JwpsiAIpYHZq/FNwpAdVFPYMYDnpS9qTAJLMRB0N99gQ==",
-                            PhoneNumberConfirmed = false,
-                            Picture = "default\\default-user.png",
-                            TwoFactorEnabled = false,
-                            UserName = "admin"
-                        });
                 });
 
             modelBuilder.Entity("CNN.Core.Domain.Entities.UserRole", b =>
@@ -335,28 +288,6 @@ namespace CNN.App.API.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = new Guid("1286870a-099c-4d1a-a113-cb9c756b5311"),
-                            RoleId = new Guid("210740d3-4da4-4889-9cbc-990a19ccf780")
-                        });
-                });
-
-            modelBuilder.Entity("CategoryProduct", b =>
-                {
-                    b.Property<Guid>("CategoriesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProductsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CategoriesId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("CategoryProduct");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -486,21 +417,6 @@ namespace CNN.App.API.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CategoryProduct", b =>
-                {
-                    b.HasOne("CNN.Core.Domain.Entities.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CNN.Core.Domain.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

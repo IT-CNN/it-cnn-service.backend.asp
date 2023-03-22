@@ -16,4 +16,6 @@ public interface IUserRepository
     Task<User?> FindByUserNameAsync(string userName);
     Task<ICollection<User>> GetAllAsync();
     Task<User?> GetByCredentialsAsync(string userName, string password);
+    Task<ICollection<User>> GetUsersByIdsAsync(List<Guid> ids);
+    Task ToggleActivationStateAsync(ICollection<User> users);
 }

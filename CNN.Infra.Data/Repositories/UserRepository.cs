@@ -33,7 +33,13 @@ public class UserRepository : IUserRepository
     private IQueryable<User> UserActiveOrAdmin { get
         {
             return UsersIncluded
-                .Where(u => u.IsActivated || u.UserRoles.FirstOrDefault(ur => ur.Role.Name == AppRoles.ADMIN) != null);
+                .Where(u => u.IsActivate || u.UserRoles.FirstOrDefault(ur => ur.Role.Name == AppRoles.ADMIN) != null);
+        } }
+
+    private IQueryable<User> UserNotAdmin { get
+        {
+            return UsersIncluded
+            .Where(u => u.UserRoles.FirstOrDefault(ur => ur.Role.Name == AppRoles.ADMIN) == null);
         } }
 
     public UserRepository(UserManager<User> userManager, RoleManager<Role> roleManager, IFileHelper fileHelper)
@@ -188,5 +194,20 @@ public class UserRepository : IUserRepository
         return await UsersIncluded
             .Where(u => u.UserRoles.FirstOrDefault(ur => ur.Role.Name == AppRoles.ADMIN) == null)
             .FirstOrDefaultAsync(u => u.Id == id);
+    }
+
+    public async Task<ICollection<User>> GetUsersByIdsAsync(List<Guid> ids)
+    {
+        return await UserNotAdmin.Where(u => ids.Contains(u.Id)).ToListAsync();
+    }
+
+    public async Task ToggleActivationStateAsync(ICollection<User> users)
+    {
+        foreach (var user in users)
+        {
+            user.IsActivate = !user.IsActivate;
+            user.UpdateAt = DateTime.UtcNow;
+            await _userManager.UpdateAsync(user);
+        }
     }
 }

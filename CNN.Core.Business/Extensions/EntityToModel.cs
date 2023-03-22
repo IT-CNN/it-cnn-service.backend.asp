@@ -1,4 +1,5 @@
-﻿using CNN.Core.Business.Models.RoleModel;
+﻿using CNN.Core.Business.Models.ProductModel;
+using CNN.Core.Business.Models.RoleModel;
 using CNN.Core.Business.Models.UserModels;
 using CNN.Core.Domain.Entities;
 using System;
@@ -22,10 +23,10 @@ public static class EntityToModel
             PhoneNumber = user.PhoneNumber,
             BirthDate = user.BirthDate,
             Picture = user.Picture,
-            Roles = user.UserRoles.Select(ur => ur.ToRoleMode()).ToList()
+            Roles = user.UserRoles.Select(ur => ur.ToRoleMode()).ToList(),
+            IsActive = user.IsActivate,
         };
     }
-
     public static UserAuthOutModel ToAuthModel(this User user, string token)
     {
         return new UserAuthOutModel(
@@ -37,15 +38,14 @@ public static class EntityToModel
             user.PhoneNumber,
             user.UserRoles.Select(ur => ur.ToRoleMode()).ToList(),
             user.Picture,
-            token
+            token,
+            user.IsActivate
             );
     }
-
     public static RoleOutModel ToRoleMode(this UserRole userRole)
     {
         return new RoleOutModel(userRole.Role.Id, userRole.Role.Name ?? string.Empty, userRole.Role.LongName);
     }
-
     public static User ToEntity(this UserCsvModel user)
     {
         return new User()
@@ -56,5 +56,49 @@ public static class EntityToModel
             LastName = user.LastName ?? string.Empty,
             PhoneNumber = user.PhoneNumber ?? string.Empty,
         };
+    }
+    public static ProductOutModel ToModel(this Product product)
+    {
+        return new ProductOutModel(
+            product.Id, 
+            product.Name,
+            product.CaseSize,
+            product.CreatedAt, 
+            product.UpdateAt, 
+            product.DeletedAt, 
+            product.IsActive, 
+            product.Code,
+            product.Prices.Select(p => p.ToModel()).ToList(),
+            product.Quantities.Select(p => p.ToModel()).ToList(),
+            product.Categories.Select(p => p.ToModel()).ToList()
+            );
+    }
+    public static ProductUnitPriceOutModel ToModel(this UnitPrice unitPrice)
+    {
+        return new ProductUnitPriceOutModel(
+            unitPrice.Id,
+            unitPrice.CreatedAt,
+            unitPrice.UpdateAt,
+            unitPrice.DeletedAt,
+            unitPrice.Value
+            );
+    }
+    public static ProductQuantityOutModel ToModel(this Quantity quantity)
+    {
+        return new ProductQuantityOutModel(
+            quantity.Id,
+            quantity.CreatedAt,
+            quantity.UpdateAt,
+            quantity.DeletedAt,
+            quantity.Value
+            );
+    }
+    public static ProductCategoryOutModel ToModel(this Category category)
+    {
+        return new ProductCategoryOutModel(
+            category.Id, 
+            category.Name,
+            category.Description
+            );
     }
 }

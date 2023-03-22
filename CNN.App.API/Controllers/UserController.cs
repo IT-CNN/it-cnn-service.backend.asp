@@ -4,6 +4,7 @@ using CNN.Core.Business.UseCases.UserUcs.AddUserAdmin;
 using CNN.Core.Business.UseCases.UserUcs.AddUserByCsvFile;
 using CNN.Core.Business.UseCases.UserUcs.GetUserById;
 using CNN.Core.Business.UseCases.UserUcs.GetUsers;
+using CNN.Core.Business.UseCases.UserUcs.ToggleUserActivationState;
 using CNN.Core.Domain;
 using CNN.Core.Domain.Exceptions;
 using MediatR;
@@ -121,6 +122,24 @@ namespace CNN.App.API.Controllers
                 var result = await _sender.Send(query);
                 return Ok(result);
             }catch(NotFoundEntityException ex)
+            {
+                return NotFound(ex.Errors);
+            }
+        }
+
+        [HttpPut("ToggleActivationStatus"), Authorize(Roles = AppRoles.ADMIN)]
+        [ProducesResponseType(typeof(ICollection<UserOutModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(Dictionary<string, string>),StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> ToggleStatusActivation([FromBody] List<Guid> ids)
+        {
+            var cmd = new ToggleUserActivationStateCommand { Ids = ids };
+            try
+            {
+                var result = await _sender.Send(cmd);
+                return Ok(result);
+            }
+            catch (NotFoundEntityException ex)
             {
                 return NotFound(ex.Errors);
             }

@@ -18,7 +18,7 @@ public class UserOutModel: BaseUserModel
     {
     }
 
-    public UserOutModel(string userName, DateTime birthDate, string firstName, string lastName, string? phoneNumber, Guid id, ICollection<RoleOutModel> roles, string? picture): base(userName, birthDate, firstName, lastName, phoneNumber)
+    public UserOutModel(string userName, DateTime birthDate, string firstName, string lastName, string? phoneNumber, Guid id, ICollection<RoleOutModel> roles, string? picture, bool isActive): base(userName, birthDate, firstName, lastName, phoneNumber, isActive)
     {
         Id = id;
         Roles = roles;

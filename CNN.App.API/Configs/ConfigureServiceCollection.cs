@@ -84,6 +84,7 @@ public static class ConfigureServiceCollection
         services.AddIdentity<User, Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+
         services.Configure<IdentityOptions>(options =>
         {
             // Default Password settings.
@@ -110,7 +111,8 @@ public static class ConfigureServiceCollection
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(o =>
+        })
+            .AddJwtBearer(o =>
         {
             o.TokenValidationParameters = new TokenValidationParameters
             {
@@ -134,6 +136,8 @@ public static class ConfigureServiceCollection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IFileHelper, FileHelper>();
         services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
         return services;
     }
 }
