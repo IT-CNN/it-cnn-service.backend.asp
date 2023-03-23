@@ -14,7 +14,7 @@ public static class EntityToModel
 {
     public static UserOutModel ToModel(this User user)
     {
-        return new UserOutModel
+        return new()
         {
             Id = user.Id,
             UserName = user.UserName!,
@@ -27,6 +27,7 @@ public static class EntityToModel
             IsActive = user.IsActivate,
         };
     }
+
     public static UserAuthOutModel ToAuthModel(this User user, string token)
     {
         return new UserAuthOutModel(
@@ -57,22 +58,20 @@ public static class EntityToModel
             PhoneNumber = user.PhoneNumber ?? string.Empty,
         };
     }
-    public static ProductOutModel ToModel(this Product product)
-    {
-        return new ProductOutModel(
-            product.Id, 
-            product.Name,
-            product.CaseSize,
-            product.CreatedAt, 
-            product.UpdateAt, 
-            product.DeletedAt, 
-            product.IsActive, 
-            product.Code,
-            product.Prices.Select(p => p.ToModel()).ToList(),
-            product.Quantities.Select(p => p.ToModel()).ToList(),
-            product.Categories.Select(p => p.ToModel()).ToList()
-            );
-    }
+    public static ProductOutModel ToModel(this Product product) => new
+    (
+        product.Id,
+        product.Name,
+        product.CaseSize,
+        product.CreatedAt,
+        product.UpdateAt,
+        product.DeletedAt,
+        product.IsActive,
+        product.Code,
+        product.Prices.Select(p => p.ToModel()).ToList(),
+        product.Quantities.Select(p => p.ToModel()).ToList(),
+        product.Categories.Select(p => p.ToModel()).ToList()
+    );
     public static ProductUnitPriceOutModel ToModel(this UnitPrice unitPrice)
     {
         return new ProductUnitPriceOutModel(

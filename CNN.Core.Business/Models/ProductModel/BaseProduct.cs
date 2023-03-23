@@ -8,8 +8,8 @@ namespace CNN.Core.Business.Models.ProductModel;
 
 public class BaseProduct
 {
-    public virtual string Name { get; set; }
-    public virtual string CaseSize { get; set; }
+    public virtual string Name { get; set; } = string.Empty;
+    public virtual string CaseSize { get; set; } = string.Empty;
 
     public BaseProduct(string name, string caseSize)
     {
