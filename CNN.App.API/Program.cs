@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddControllers()
     .AddNewtonsoftJson();
+
+builder.Services.AddCors();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -31,6 +33,12 @@ app.ConfigureStaticFiles()
     .UseResponseCompression()
     .UseAuthentication();
 
+app.UseCors(opt => opt
+    .WithOrigins("http://localhost:3000", "http://localhost:8000", "http://localhost:4200")
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials()
+);
 
 app.UseHttpsRedirection();
 
