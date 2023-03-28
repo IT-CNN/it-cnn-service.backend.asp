@@ -12,6 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid, Identity
     public DbSet<UnitPrice> UnitPrices { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
+    public DbSet<Client> Clients { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
@@ -69,8 +70,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid, Identity
             };
             role.HasData(roles);
         });
-
-
+        
         builder.Entity<UserRole>(userRole =>
         {
             userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
@@ -116,6 +116,46 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid, Identity
                 }
             };
             category.HasData(categories);
+        });
+
+        // Client
+        builder.Entity<Client>(client =>
+        {
+            client.HasIndex(c => c.PhoneNumber).IsUnique();
+            var clients = new List<Client>
+            {
+                new Client
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "client 1",
+                    PhoneNumber = "690981056"
+                },
+                new Client
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "client 2",
+                    PhoneNumber = "690981057"
+                },
+                new Client
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "client 3",
+                    PhoneNumber = "690981058"
+                },
+                new Client
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "client 4",
+                    PhoneNumber = "690981059"
+                },
+                new Client
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "client 5",
+                    PhoneNumber = "690981060"
+                },
+            };
+            client.HasData(clients);
         });
     }
 }

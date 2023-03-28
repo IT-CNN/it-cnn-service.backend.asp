@@ -18,4 +18,8 @@ public class ProductCategoryOutModel
         Name = name;
         Description = description;
     }
+
+    public ProductCategoryOutModel()
+    {
+    }
 }

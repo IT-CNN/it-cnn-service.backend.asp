@@ -138,6 +138,8 @@ public static class ConfigureServiceCollection
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IClientRepository, ClientRepository>();
         return services;
     }
 }

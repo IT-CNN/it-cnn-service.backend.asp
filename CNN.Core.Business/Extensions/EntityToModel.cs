@@ -1,4 +1,6 @@
-﻿using CNN.Core.Business.Models.ProductModel;
+﻿using CNN.Core.Business.Models.CategoryModel;
+using CNN.Core.Business.Models.ClientModel;
+using CNN.Core.Business.Models.ProductModel;
 using CNN.Core.Business.Models.RoleModel;
 using CNN.Core.Business.Models.UserModels;
 using CNN.Core.Domain.Entities;
@@ -47,6 +49,7 @@ public static class EntityToModel
     {
         return new RoleOutModel(userRole.Role.Id, userRole.Role.Name ?? string.Empty, userRole.Role.LongName);
     }
+    public static RoleOutModel ToModel(this Role role) => new RoleOutModel(role.Id, role.Name!, role.LongName);
     public static User ToEntity(this UserCsvModel user)
     {
         return new User()
@@ -92,12 +95,26 @@ public static class EntityToModel
             quantity.Value
             );
     }
-    public static ProductCategoryOutModel ToModel(this Category category)
-    {
-        return new ProductCategoryOutModel(
-            category.Id, 
+    public static ProductCategoryOutModel ToModel(this Category category) => 
+        new(
+            category.Id,
             category.Name,
             category.Description
             );
-    }
+    public static CategoryOutModel ToCategoryModel(this Category category) => 
+        new(
+            category.Id, 
+            category.Name, 
+            category.Description, 
+            category.Products.Select(p => p.ToModel()).ToList()
+            );
+    public static ClientOutModel ToModel(this Client client) =>
+        new(
+            client.Id,
+            client.Name,
+            client.PhoneNumber,
+            client.CreatedAt,
+            client.UpdateAt,
+            client.IsActive
+            );
 }
